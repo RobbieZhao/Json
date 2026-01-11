@@ -7,7 +7,7 @@ export type Json =
   | { [key: string]: Json };
 
 export type JsonParseResult =
-  | { ok: true; value: Json; formatted: string }
+  | { ok: true; value: Json }
   | { ok: false; errorMessage: string; position?: number };
 
 function extractPositionFromJsonErrorMessage(message: string): number | undefined {
@@ -26,8 +26,7 @@ export function parseJson(input: string): JsonParseResult {
 
   try {
     const value = JSON.parse(trimmed) as Json;
-    const formatted = JSON.stringify(value, null, 2);
-    return { ok: true, value, formatted };
+    return { ok: true, value };
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Invalid JSON";
     return {
@@ -36,6 +35,10 @@ export function parseJson(input: string): JsonParseResult {
       position: extractPositionFromJsonErrorMessage(msg),
     };
   }
+}
+
+export function formatJson(value: Json, indentSize: 2 | 4): string {
+  return JSON.stringify(value, null, indentSize);
 }
 
 export function isJsonArray(value: Json): value is Json[] {

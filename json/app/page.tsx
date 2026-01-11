@@ -3,7 +3,7 @@
 import React from "react";
 import { JsonTree } from "./components/JsonTree";
 import { JsonPretty } from "./components/JsonPretty";
-import { parseJson } from "./utils/json";
+import { formatJson, parseJson } from "./utils/json";
 
 const EXAMPLE = `{
   "user": { "id": 123, "name": "Ava", "active": true },
@@ -23,19 +23,24 @@ export default function Home() {
   const [input, setInput] = React.useState<string>(EXAMPLE);
   const [activeRightTab, setActiveRightTab] = React.useState<"tree" | "pretty">("tree");
   const [copyState, setCopyState] = React.useState<"idle" | "copied">("idle");
+  const [indentSize, setIndentSize] = React.useState<2 | 4>(2);
 
   const parsed = React.useMemo(() => parseJson(input), [input]);
+  const pretty = React.useMemo(() => {
+    if (!parsed.ok) return null;
+    return formatJson(parsed.value, indentSize);
+  }, [parsed, indentSize]);
 
   const onCopyPretty = async () => {
-    if (!parsed.ok) return;
-    await copyToClipboard(parsed.formatted);
+    if (!pretty) return;
+    await copyToClipboard(pretty);
     setCopyState("copied");
     window.setTimeout(() => setCopyState("idle"), 900);
   };
 
   const onFormatInput = () => {
-    if (!parsed.ok) return;
-    setInput(parsed.formatted);
+    if (!pretty) return;
+    setInput(pretty);
   };
 
   const onMinifyInput = () => {
@@ -50,6 +55,34 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h1 className="text-2xl font-semibold tracking-tight">JSON Formatter</h1>
             <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                <button
+                  type="button"
+                  onClick={() => setIndentSize(2)}
+                  className={[
+                    "px-3 py-1.5 text-sm",
+                    indentSize === 2
+                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                      : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                  ].join(" ")}
+                  aria-pressed={indentSize === 2}
+                >
+                  2 spaces
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIndentSize(4)}
+                  className={[
+                    "px-3 py-1.5 text-sm",
+                    indentSize === 4
+                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                      : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                  ].join(" ")}
+                  aria-pressed={indentSize === 4}
+                >
+                  4 spaces
+                </button>
+              </div>
               <button
                 type="button"
                 onClick={() => setInput(EXAMPLE)}
@@ -117,7 +150,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={() => setActiveRightTab("pretty")}
-                    disabled={!parsed.ok}
+                  disabled={!pretty}
                     className={[
                       "px-3 py-1.5 text-sm disabled:opacity-50",
                       activeRightTab === "pretty"
@@ -132,7 +165,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={onCopyPretty}
-                  disabled={!parsed.ok}
+                  disabled={!pretty}
                   className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
                 >
                   {copyState === "copied" ? "Copied" : "Copy pretty"}
@@ -155,7 +188,7 @@ export default function Home() {
                 <JsonTree value={parsed.value} />
               </div>
             ) : (
-              <JsonPretty value={parsed.formatted} />
+              <JsonPretty value={pretty ?? ""} />
             )}
           </section>
         </main>
