@@ -2,6 +2,7 @@
 
 import React from "react";
 import { JsonTree } from "./components/JsonTree";
+import { JsonPretty } from "./components/JsonPretty";
 import { parseJson } from "./utils/json";
 
 const EXAMPLE = `{
@@ -154,9 +155,7 @@ export default function Home() {
                 <JsonTree value={parsed.value} />
               </div>
             ) : (
-              <pre className="h-[70vh] overflow-auto rounded-lg border border-zinc-200 bg-white p-3 font-mono text-[13px] leading-6 text-zinc-900 dark:border-zinc-800 dark:bg-black dark:text-zinc-100">
-                {parsed.formatted}
-              </pre>
+              <JsonPretty value={parsed.formatted} />
             )}
           </section>
         </main>
