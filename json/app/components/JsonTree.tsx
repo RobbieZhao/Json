@@ -6,6 +6,8 @@ import { isJsonArray, isJsonObject } from "../utils/json";
 
 type Path = Array<string | number>;
 
+type JsonScalarValue = Exclude<Json, Json[] | { [k: string]: Json }>;
+
 function pathToId(path: Path): string {
   if (path.length === 0) return "$";
   let out = "$";
@@ -38,9 +40,9 @@ function getContainerPaths(value: Json, basePath: Path = []): string[] {
   return out;
 }
 
-function JsonScalar({ value }: { value: Exclude<Json, Json[] | { [k: string]: Json }> }) {
+function JsonScalar({ value }: { value: JsonScalarValue }) {
   if (value === null) return <span className="text-zinc-500">null</span>;
-  if (typeof value === "string") return <span className="text-emerald-700">"{value}"</span>;
+  if (typeof value === "string") return <span className="text-emerald-700">&quot;{value}&quot;</span>;
   if (typeof value === "number") return <span className="text-blue-700">{String(value)}</span>;
   return <span className="text-purple-700">{String(value)}</span>;
 }
@@ -177,7 +179,7 @@ function Node({ value, path, name, collapsed, setCollapsed, level }: NodeProps) 
     <div style={indent} className="leading-6">
       <span className="inline-flex h-6 w-6" />
       {keyLabel ? <>{keyLabel}: </> : null}
-      <JsonScalar value={value as any} />
+      <JsonScalar value={value as JsonScalarValue} />
     </div>
   );
 }

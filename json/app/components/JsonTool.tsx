@@ -50,67 +50,38 @@ export function JsonTool() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
-            <button
-              type="button"
-              onClick={() => setIndentSize(2)}
-              className={[
-                "px-3 py-1.5 text-sm",
-                indentSize === 2
-                  ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                  : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-              ].join(" ")}
-              aria-pressed={indentSize === 2}
-            >
-              2 spaces
-            </button>
-            <button
-              type="button"
-              onClick={() => setIndentSize(4)}
-              className={[
-                "px-3 py-1.5 text-sm",
-                indentSize === 4
-                  ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                  : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-              ].join(" ")}
-              aria-pressed={indentSize === 4}
-            >
-              4 spaces
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={() => setInput(EXAMPLE)}
-            className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-          >
-            Load example
-          </button>
-          <button
-            type="button"
-            onClick={onFormatInput}
-            disabled={!parsed.ok}
-            className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-          >
-            Format input
-          </button>
-          <button
-            type="button"
-            onClick={onMinifyInput}
-            disabled={!parsed.ok}
-            className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-          >
-            Minify input
-          </button>
-        </div>
-      </div>
-
       <main className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Input</h2>
-            <div className="text-xs text-zinc-500">{parsed.ok ? "Valid JSON" : "Invalid JSON"}</div>
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Input</h2>
+              <div className="text-xs text-zinc-500">{parsed.ok ? "Valid JSON" : "Invalid JSON"}</div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setInput(EXAMPLE)}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Load example
+              </button>
+              <button
+                type="button"
+                onClick={onFormatInput}
+                disabled={!parsed.ok}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Format input
+              </button>
+              <button
+                type="button"
+                onClick={onMinifyInput}
+                disabled={!parsed.ok}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Minify input
+              </button>
+            </div>
           </div>
           <textarea
             value={input}
@@ -177,7 +148,39 @@ export function JsonTool() {
               <JsonTree value={parsed.value} />
             </div>
           ) : (
-            <JsonPretty value={pretty ?? ""} />
+            <div>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                  <button
+                    type="button"
+                    onClick={() => setIndentSize(2)}
+                    className={[
+                      "px-3 py-1.5 text-sm",
+                      indentSize === 2
+                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                    ].join(" ")}
+                    aria-pressed={indentSize === 2}
+                  >
+                    2 spaces
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIndentSize(4)}
+                    className={[
+                      "px-3 py-1.5 text-sm",
+                      indentSize === 4
+                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                    ].join(" ")}
+                    aria-pressed={indentSize === 4}
+                  >
+                    4 spaces
+                  </button>
+                </div>
+              </div>
+              <JsonPretty value={pretty ?? ""} />
+            </div>
           )}
         </section>
       </main>
