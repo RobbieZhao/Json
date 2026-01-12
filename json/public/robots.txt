@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Sitemap: https://awesomejson.vercel.app/sitemap.xml
+
+
