@@ -19,6 +19,21 @@ export default function JsonDiffPage() {
           <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
             <JsonDiffTool />
           </section>
+
+          <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
+            <h2 className="text-lg font-semibold">Visual JSON Diff with Highlights</h2>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300">
+              Spot differences quickly: green for fields missing on the right, amber for fields missing on the left, and blue for unequal values.
+            </p>
+            <p className="text-sm text-zinc-700 dark:text-zinc-300">
+              Paste or type JSON into each side, format both, and toggle which difference types to highlight. Everything runs locally in your browser.
+            </p>
+            <ul className="list-disc pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+              <li>Side-by-side previews with color-coded rows</li>
+              <li>Counts for missing and unequal fields</li>
+              <li>Example payloads to get started fast</li>
+            </ul>
+          </section>
         </div>
       </div>
     </div>
