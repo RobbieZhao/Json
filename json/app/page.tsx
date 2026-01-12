@@ -10,7 +10,7 @@ export default function Home() {
           <SideNav />
         </div>
         <div className="flex flex-1 flex-col gap-6">
-          <header className="flex flex-col gap-2">
+          <header className="flex flex-col gap-2" id="formatter">
             <h1 className="text-2xl font-semibold tracking-tight">
               JSON Formatter with Array Lengths &amp; Tree View
             </h1>
@@ -39,7 +39,6 @@ export default function Home() {
             </ul>
           </section>
 
-          <ExploreMore />
         </div>
       </div>
     </div>
@@ -50,13 +49,4 @@ function ToolSection() {
   return <JsonTool />;
 }
 
-function ExploreMore() {
-  return (
-    <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-      <h2 className="text-lg font-semibold">Explore more</h2>
-      <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
-        More pages coming soon.
-      </p>
-    </section>
-  );
-}
+// Additional sections can be added here in the future.

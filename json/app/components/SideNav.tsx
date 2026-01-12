@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 type NavItem = {
   label: string;
   hint?: string;
+  href?: string;
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Formatter", hint: "JSON tools" },
+  { label: "Formatter", hint: "JSON tools", href: "/" },
+  { label: "JSON Diff", hint: "Compare payloads", href: "/json-diff" },
   { label: "Coming soon", hint: "Future tools" },
 ];
 
@@ -46,30 +49,56 @@ export function SideNav() {
 
       <div className="mt-3 flex-1 space-y-1 overflow-hidden">
         {NAV_ITEMS.map((item) => (
-          <button
-            key={item.label}
-            type="button"
-            title={item.label}
-            className={[
-              "group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm text-zinc-700 transition",
-              "hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-900",
-              isOpen ? "justify-start" : "justify-center",
-            ].join(" ")}
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
-              {item.label.slice(0, 2)}
-            </span>
-            {isOpen ? (
-              <span className="flex flex-col">
-                <span className="font-semibold leading-tight">{item.label}</span>
-                {item.hint ? (
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                    {item.hint}
+          <div key={item.label}>
+            {item.href ? (
+              <Link
+                href={item.href}
+                title={item.label}
+                className={[
+                  "group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm text-zinc-700 transition",
+                  "hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-900",
+                  isOpen ? "justify-start" : "justify-center",
+                ].join(" ")}
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
+                  {item.label.slice(0, 2)}
+                </span>
+                {isOpen ? (
+                  <span className="flex flex-col">
+                    <span className="font-semibold leading-tight">{item.label}</span>
+                    {item.hint ? (
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {item.hint}
+                      </span>
+                    ) : null}
                   </span>
                 ) : null}
-              </span>
-            ) : null}
-          </button>
+              </Link>
+            ) : (
+              <div
+                title={item.label}
+                className={[
+                  "group flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left text-sm text-zinc-500 transition",
+                  "cursor-default opacity-70 dark:text-zinc-400",
+                  isOpen ? "justify-start" : "justify-center",
+                ].join(" ")}
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-dashed border-zinc-200 bg-zinc-50 text-xs font-semibold uppercase text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100">
+                  {item.label.slice(0, 2)}
+                </span>
+                {isOpen ? (
+                  <span className="flex flex-col">
+                    <span className="font-semibold leading-tight">{item.label}</span>
+                    {item.hint ? (
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {item.hint}
+                      </span>
+                    ) : null}
+                  </span>
+                ) : null}
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
