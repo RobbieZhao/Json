@@ -134,9 +134,9 @@ function walkDiff(
   if (left === undefined && right === undefined) return;
   if (left === undefined) {
     setStatus(rightMap, id, "rightOnly");
-    if (isJsonArray(right)) {
+    if (right !== undefined && isJsonArray(right)) {
       right.forEach((v, i) => walkDiff(undefined, v as Json, [...path, i], leftMap, rightMap));
-    } else if (isJsonObject(right)) {
+    } else if (right !== undefined && isJsonObject(right)) {
       for (const [k, v] of Object.entries(right)) {
         walkDiff(undefined, v as Json, [...path, k], leftMap, rightMap);
       }
@@ -145,9 +145,9 @@ function walkDiff(
   }
   if (right === undefined) {
     setStatus(leftMap, id, "leftOnly");
-    if (isJsonArray(left)) {
+    if (left !== undefined && isJsonArray(left)) {
       left.forEach((v, i) => walkDiff(v as Json, undefined, [...path, i], leftMap, rightMap));
-    } else if (isJsonObject(left)) {
+    } else if (left !== undefined && isJsonObject(left)) {
       for (const [k, v] of Object.entries(left)) {
         walkDiff(v as Json, undefined, [...path, k], leftMap, rightMap);
       }
