@@ -46,6 +46,9 @@ export const metadata: Metadata = {
       "Free online JSON formatter and parser. Instantly visualize JSON structure, expand/collapse nodes, and see array lengths.",
     images: ["/og.png"],
   },
+  verification: {
+    google: "70VU0zaCHQINWgvpu5zFKRahxvcegTBVXOTS1o5iCCM"
+  }
 };
 
 export default function RootLayout({
