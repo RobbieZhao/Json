@@ -42,7 +42,7 @@ function getContainerPaths(value: Json, basePath: Path = []): string[] {
 
 function JsonScalar({ value }: { value: JsonScalarValue }) {
   if (value === null) return <span className="text-zinc-500">null</span>;
-  if (typeof value === "string") return <span className="text-emerald-700">&quot;{value}&quot;</span>;
+  if (typeof value === "string") return <span className="text-emerald-700">"{value}"</span>;
   if (typeof value === "number") return <span className="text-blue-700">{String(value)}</span>;
   return <span className="text-purple-700">{String(value)}</span>;
 }
@@ -184,13 +184,19 @@ function Node({ value, path, name, collapsed, setCollapsed, level }: NodeProps) 
   );
 }
 
-export function JsonTree({
-  value,
-  className,
-}: {
-  value: Json;
-  className?: string;
-}) {
+export type JsonTreeHandle = {
+  expandAll: () => void;
+  collapseAll: () => void;
+};
+
+export const JsonTree = React.forwardRef<
+  JsonTreeHandle,
+  {
+    value: Json;
+    className?: string;
+    showControls?: boolean;
+  }
+>(function JsonTree({ value, className, showControls = true }, ref) {
   const [collapsed, setCollapsed] = React.useState<Set<string>>(() => new Set());
 
   // Reset collapse state when the root value changes (keeps things predictable when pasting new JSON).
@@ -200,34 +206,45 @@ export function JsonTree({
 
   const containerPaths = React.useMemo(() => getContainerPaths(value), [value]);
 
-  const expandAll = () => setCollapsed(new Set());
-  const collapseAll = () => {
+  const expandAll = React.useCallback(() => setCollapsed(new Set()), []);
+  const collapseAll = React.useCallback(() => {
     // Collapse all containers except root, so you still see the top-level shape.
     const ids = containerPaths.filter((p) => p !== "$");
     setCollapsed(new Set(ids));
-  };
+  }, [containerPaths]);
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      expandAll,
+      collapseAll,
+    }),
+    [expandAll, collapseAll],
+  );
 
   return (
     <div className={className}>
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={expandAll}
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
-        >
-          Expand all
-        </button>
-        <button
-          type="button"
-          onClick={collapseAll}
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
-        >
-          Collapse all
-        </button>
-        <div className="text-xs text-zinc-500">
-          Tip: click the caret next to a field to collapse/expand.
+      {showControls ? (
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={expandAll}
+            className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+          >
+            Expand all
+          </button>
+          <button
+            type="button"
+            onClick={collapseAll}
+            className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+          >
+            Collapse all
+          </button>
+          <div className="text-xs text-zinc-500">
+            Tip: click the caret next to a field to collapse/expand.
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="rounded-lg border border-zinc-200 bg-white p-3 font-mono text-[13px] dark:border-zinc-800 dark:bg-zinc-950">
         <Node
@@ -240,6 +257,6 @@ export function JsonTree({
       </div>
     </div>
   );
-}
+});
 
 

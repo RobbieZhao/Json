@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { JsonTool } from "./components/JsonTool";
 
 export default function Home() {
@@ -49,26 +48,9 @@ function ExploreMore() {
   return (
     <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
       <h2 className="text-lg font-semibold">Explore more</h2>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Link
-          href="/json-formatter"
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-        >
-          JSON Formatter
-        </Link>
-        <Link
-          href="/json-parser"
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-        >
-          JSON Parser
-        </Link>
-        <Link
-          href="/json-array-length"
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-        >
-          JSON Array Lengths
-        </Link>
-      </div>
+      <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
+        More pages coming soon.
+      </p>
     </section>
   );
 }

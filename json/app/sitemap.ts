@@ -7,18 +7,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://awesomejson.vercel.app/",
       lastModified,
     },
-    {
-      url: "https://awesomejson.vercel.app/json-formatter",
-      lastModified,
-    },
-    {
-      url: "https://awesomejson.vercel.app/json-parser",
-      lastModified,
-    },
-    {
-      url: "https://awesomejson.vercel.app/json-array-length",
-      lastModified,
-    },
   ];
 }
 
