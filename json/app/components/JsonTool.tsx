@@ -21,9 +21,9 @@ async function copyToClipboard(text: string) {
 
 export function JsonTool() {
   const [input, setInput] = React.useState<string>(EXAMPLE);
-  const [activeRightTab, setActiveRightTab] = React.useState<"tree" | "pretty">("tree");
+  const [activeRightTab, setActiveRightTab] = React.useState<"tree" | "pretty">("pretty");
   const [copyState, setCopyState] = React.useState<"idle" | "copied">("idle");
-  const [indentSize, setIndentSize] = React.useState<2 | 4>(2);
+  const [indentSize, setIndentSize] = React.useState<2 | 4>(4);
   const treeRef = React.useRef<JsonTreeHandle | null>(null);
 
   const parsed = React.useMemo(() => parseJson(input), [input]);
@@ -53,40 +53,35 @@ export function JsonTool() {
     <div className="flex flex-col gap-4">
       <main className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <section className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="mb-2 flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Input</h2>
-                <div className="text-xs text-zinc-500">{parsed.ok ? "Valid JSON" : "Invalid JSON"}</div>
-              </div>
+          <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Input</h2>
+              <div className="text-xs text-zinc-500">{parsed.ok ? "Valid JSON" : "Invalid JSON"}</div>
             </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setInput(EXAMPLE)}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-                >
-                  Load example
-                </button>
-                <button
-                  type="button"
-                  onClick={onFormatInput}
-                  disabled={!parsed.ok}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-                >
-                  Format input
-                </button>
-                <button
-                  type="button"
-                  onClick={onMinifyInput}
-                  disabled={!parsed.ok}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
-                >
-                  Minify input
-                </button>
-              </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setInput(EXAMPLE)}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Load example
+              </button>
+              <button
+                type="button"
+                onClick={onFormatInput}
+                disabled={!parsed.ok}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Format input
+              </button>
+              <button
+                type="button"
+                onClick={onMinifyInput}
+                disabled={!parsed.ok}
+                className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+              >
+                Minify input
+              </button>
             </div>
           </div>
           <textarea
@@ -99,101 +94,99 @@ export function JsonTool() {
         </section>
 
         <section className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
-          <div className="mb-2 flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Output</h2>
-            </div>
+          <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
+            <h2 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Output</h2>
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
                 <button
                   type="button"
-                  onClick={() => treeRef.current?.expandAll()}
-                  disabled={!parsed.ok || activeRightTab !== "tree"}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                  onClick={() => setActiveRightTab("pretty")}
+                  className={[
+                    "px-3 py-1.5 text-sm",
+                    activeRightTab === "pretty"
+                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                      : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                  ].join(" ")}
                 >
-                  Expand all
+                  Pretty
                 </button>
                 <button
                   type="button"
-                  onClick={() => treeRef.current?.collapseAll()}
-                  disabled={!parsed.ok || activeRightTab !== "tree"}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
-                >
-                  Collapse all
-                </button>
-                <div className="text-xs text-zinc-500">
-                  Tip: click the caret next to a field to collapse/expand.
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
-                  <button
-                    type="button"
-                    onClick={() => setActiveRightTab("tree")}
-                    className={[
-                      "px-3 py-1.5 text-sm",
-                      activeRightTab === "tree"
-                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                    ].join(" ")}
-                  >
-                    Tree
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveRightTab("pretty")}
-                    disabled={!pretty}
-                    className={[
-                      "px-3 py-1.5 text-sm disabled:opacity-50",
-                      activeRightTab === "pretty"
-                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                    ].join(" ")}
-                  >
-                    Pretty
-                  </button>
-                </div>
-
-                <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
-                  <button
-                    type="button"
-                    onClick={() => setIndentSize(2)}
-                    className={[
-                      "px-3 py-1.5 text-sm",
-                      indentSize === 2
-                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                    ].join(" ")}
-                    aria-pressed={indentSize === 2}
-                  >
-                    2 spaces
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIndentSize(4)}
-                    className={[
-                      "px-3 py-1.5 text-sm",
-                      indentSize === 4
-                        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                        : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                    ].join(" ")}
-                    aria-pressed={indentSize === 4}
-                  >
-                    4 spaces
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={onCopyPretty}
+                  onClick={() => setActiveRightTab("tree")}
                   disabled={!pretty}
-                  className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+                  className={[
+                    "px-3 py-1.5 text-sm disabled:opacity-50",
+                    activeRightTab === "tree"
+                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                      : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                  ].join(" ")}
                 >
-                  {copyState === "copied" ? "Copied" : "Copy pretty"}
+                  Tree
                 </button>
               </div>
+
+              {activeRightTab === "tree" ? (
+                <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                  <button
+                    type="button"
+                    onClick={() => treeRef.current?.expandAll()}
+                    disabled={!parsed.ok}
+                    className="px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Expand all
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => treeRef.current?.collapseAll()}
+                    disabled={!parsed.ok}
+                    className="px-3 py-1.5 text-sm text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                  >
+                    Collapse all
+                  </button>
+                </div>
+              ) : null}
+
+              {activeRightTab === "pretty" ? (
+                <>
+                  <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
+                    <button
+                      type="button"
+                      onClick={() => setIndentSize(4)}
+                      className={[
+                        "px-3 py-1.5 text-sm",
+                        indentSize === 4
+                          ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                          : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                      ].join(" ")}
+                      aria-pressed={indentSize === 4}
+                    >
+                      4 spaces
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIndentSize(2)}
+                      className={[
+                        "px-3 py-1.5 text-sm",
+                        indentSize === 2
+                          ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
+                          : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                      ].join(" ")}
+                      aria-pressed={indentSize === 2}
+                    >
+                      2 spaces
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onCopyPretty}
+                    disabled={!pretty}
+                    className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900"
+                  >
+                    {copyState === "copied" ? "Copied" : "Copy pretty"}
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
 
