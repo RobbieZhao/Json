@@ -12,6 +12,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "Formatter", hint: "JSON tools", href: "/" },
   { label: "JSON Diff", hint: "Compare payloads", href: "/json-diff" },
+  { label: "JSON ⇄ YAML", hint: "Convert formats", href: "/json-yaml" },
   { label: "Coming soon", hint: "Future tools" },
 ];
 
