@@ -35,6 +35,28 @@ export function JsonYamlTool() {
   const sourceLabel = isJsonToYaml ? "JSON input" : "YAML input";
   const targetLabel = isJsonToYaml ? "YAML output" : "JSON output";
 
+  const performConvert = React.useCallback(
+    (source: string, dir: Direction, ind: 2 | 4) => {
+      try {
+        let result: string;
+        if (dir === "jsonToYaml") {
+          const parsed = JSON.parse(source);
+          result = YAML.stringify(parsed, { indent: ind });
+        } else {
+          const parsed = YAML.parse(source);
+          result = JSON.stringify(parsed, null, ind);
+        }
+        setOutput(result);
+        setError(null);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Conversion failed";
+        setError(msg);
+        setOutput("");
+      }
+    },
+    [],
+  );
+
   const convert = React.useCallback(() => {
     try {
       let result: string;
@@ -59,60 +81,31 @@ export function JsonYamlTool() {
     setOutput("");
     setError(null);
     setInput((prev) => {
-      // If user wants to quickly flip, move previous output into input when available.
-      return output || (prev === EXAMPLE_JSON ? EXAMPLE_YAML : prev);
+      // Swap current panes: move rendered output into the new source box when available.
+      if (output) return output;
+      // Fallback to a sensible example when no output yet.
+      return prev === EXAMPLE_JSON ? EXAMPLE_YAML : EXAMPLE_JSON;
     });
   };
 
   const loadExample = () => {
-    if (isJsonToYaml) {
-      setInput(EXAMPLE_JSON);
-    } else {
-      setInput(EXAMPLE_YAML);
-    }
+    const sample = isJsonToYaml ? EXAMPLE_JSON : EXAMPLE_YAML;
+    setInput(sample);
     setOutput("");
     setError(null);
+    performConvert(sample, direction, indent);
   };
+
+  React.useEffect(() => {
+    convert();
+  }, [convert]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
-          <button
-            type="button"
-            onClick={() => setDirection("jsonToYaml")}
-            className={[
-              "px-3 py-1.5 text-sm",
-              isJsonToYaml
-                ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-            ].join(" ")}
-            aria-pressed={isJsonToYaml}
-          >
-            JSON → YAML
-          </button>
-          <button
-            type="button"
-            onClick={() => setDirection("yamlToJson")}
-            className={[
-              "px-3 py-1.5 text-sm",
-              !isJsonToYaml
-                ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100"
-                : "bg-white text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-900",
-            ].join(" ")}
-            aria-pressed={!isJsonToYaml}
-          >
-            YAML → JSON
-          </button>
+        <div className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200">
+          {isJsonToYaml ? "Direction: JSON → YAML" : "Direction: YAML → JSON"}
         </div>
-
-        <button
-          type="button"
-          onClick={swapDirection}
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
-        >
-          Swap
-        </button>
 
         <button
           type="button"
@@ -120,6 +113,14 @@ export function JsonYamlTool() {
           className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
         >
           Load example
+        </button>
+
+        <button
+          type="button"
+          onClick={swapDirection}
+          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
+        >
+          Swap
         </button>
 
         <div className="inline-flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800">
@@ -149,13 +150,6 @@ export function JsonYamlTool() {
           </button>
         </div>
 
-        <button
-          type="button"
-          onClick={convert}
-          className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:bg-zinc-900"
-        >
-          Convert
-        </button>
       </div>
 
       {error ? (
