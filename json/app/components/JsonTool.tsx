@@ -203,7 +203,7 @@ export function JsonTool() {
               <JsonTree ref={treeRef} value={parsed.value} showControls={false} />
             </div>
           ) : (
-            <JsonPretty value={pretty ?? ""} />
+            <JsonPretty value={parsed.value} indentSize={indentSize} />
           )}
         </section>
       </main>
